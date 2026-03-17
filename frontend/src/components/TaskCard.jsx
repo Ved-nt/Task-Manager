@@ -18,32 +18,36 @@ const TaskCard = ({ task, onUpdate }) => {
   const isDone = task.status === "Completed";
 
   const toggleStatus = async () => {
+    if (isDone) return; // prevent toggling back once completed
     await updateTask(task.id, {
       ...task,
-      status: isDone ? "Pending" : "Completed",
+      status: "Completed",
     });
     onUpdate();
   };
 
-
   const handleDelete = async () => {
+    if (isDone) return; // prevent deleting completed tasks
     await deleteTask(task.id);
     onUpdate();
   };
 
   return (
     <div
-      className={`flex items-start gap-4 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-5 py-4 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.055] hover:border-white/[0.13] hover:shadow-[0_12px_30px_rgba(0,0,0,0.3)] ${
-        isDone ? "opacity-50" : ""
+      className={`flex items-start gap-4 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-5 py-4 transition-all duration-200 ${
+        isDone
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:-translate-y-0.5 hover:bg-white/[0.055] hover:border-white/[0.13] hover:shadow-[0_12px_30px_rgba(0,0,0,0.3)]"
       }`}
     >
       {/* Checkbox */}
       <button
         onClick={toggleStatus}
         aria-label="Toggle complete"
+        disabled={isDone}
         className={`mt-0.5 w-5 h-5 flex-shrink-0 rounded-md border-2 flex items-center justify-center text-xs transition-all ${
           isDone
-            ? "border-emerald-400 bg-emerald-400/15 text-emerald-400"
+            ? "border-emerald-400 bg-emerald-400/15 text-emerald-400 cursor-not-allowed"
             : "border-white/20 hover:border-emerald-400"
         }`}
       >
@@ -70,7 +74,11 @@ const TaskCard = ({ task, onUpdate }) => {
 
         {/* Description */}
         {task.description && (
-          <p className="text-sm text-white/35 leading-relaxed line-clamp-2">
+          <p
+            className={`text-sm leading-relaxed line-clamp-2 ${
+              isDone ? "text-white/20" : "text-white/35"
+            }`}
+          >
             {task.description}
           </p>
         )}
@@ -97,14 +105,16 @@ const TaskCard = ({ task, onUpdate }) => {
         </div>
       </div>
 
-      {/* Delete */}
-      <button
-        onClick={handleDelete}
-        aria-label="Delete task"
-        className="text-white/15 text-sm px-1.5 py-1 rounded-md hover:text-red-400 hover:bg-red-400/10 transition-all mt-0.5 flex-shrink-0"
-      >
-        ✕
-      </button>
+      {/* Delete (hidden if completed) */}
+      {!isDone && (
+        <button
+          onClick={handleDelete}
+          aria-label="Delete task"
+          className="text-white/15 text-sm px-1.5 py-1 rounded-md hover:text-red-400 hover:bg-red-400/10 transition-all mt-0.5 flex-shrink-0"
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 };
