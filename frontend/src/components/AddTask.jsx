@@ -19,23 +19,23 @@ const AddTask = () => {
     priority: "Medium",
     category: "Work",
     dueDate: "",
+    status: "Pending"   // default status
   });
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
-    addTask(form);
+    await addTask(form);
     setSubmitted(true);
     setTimeout(() => navigate("/tasks"), 1200);
   };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 animate-fade-up">
-      {/* Header */}
       <p className="text-xs font-mono uppercase tracking-widest text-yellow-400 mb-2">
         New Task
       </p>
@@ -131,12 +131,30 @@ const AddTask = () => {
               Due Date
             </label>
             <input
-              type="date"
+              type="text"
               name="dueDate"
               value={form.dueDate}
               onChange={handleChange}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-yellow-400/40 transition-all w-fit"
+              placeholder="dd-MM-yyyy"
+              className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 outline-none focus:border-yellow-400/40 transition-all w-fit"
             />
+          </div>
+
+
+          {/* Status */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-mono uppercase tracking-widest text-white/40">
+              Status
+            </label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-yellow-400/40 transition-all cursor-pointer"
+            >
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
           </div>
 
           {/* Actions */}

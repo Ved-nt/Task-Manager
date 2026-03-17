@@ -11,19 +11,30 @@ const TaskList = () => {
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [search, setSearch]             = useState("");
 
-  const load = useCallback(() => setTasks(getTasks()), []);
-  useEffect(() => { load(); }, [load]);
+  const load = useCallback(async () => {
+    const data = await getTasks();
+    console.log("Fetched tasks:", data);
+    setTasks(data);
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const filtered = tasks.filter((t) => {
     const matchStatus =
       statusFilter === "All" ||
-      (statusFilter === "Pending"   && t.status !== "completed") ||
-      (statusFilter === "Completed" && t.status === "completed");
-    const matchPriority = priorityFilter === "All" || t.priority === priorityFilter;
+      (statusFilter === "Pending"   && t.status === "Pending") ||
+      (statusFilter === "Completed" && t.status === "Completed");
+
+    const matchPriority =
+      priorityFilter === "All" || t.priority === priorityFilter;
+
     const matchSearch =
       !search ||
       t.title.toLowerCase().includes(search.toLowerCase()) ||
       (t.description || "").toLowerCase().includes(search.toLowerCase());
+
     return matchStatus && matchPriority && matchSearch;
   });
 

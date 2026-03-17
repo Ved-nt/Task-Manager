@@ -6,14 +6,20 @@ const Home = () => {
   const [stats, setStats] = useState({ total: 0, pending: 0, completed: 0, high: 0 });
 
   useEffect(() => {
-    const tasks = getTasks();
-    setStats({
-      total:     tasks.length,
-      pending:   tasks.filter((t) => t.status !== "completed").length,
-      completed: tasks.filter((t) => t.status === "completed").length,
-      high:      tasks.filter((t) => t.priority === "High" && t.status !== "completed").length,
-    });
-  }, []);
+    const fetchData = async () => {
+      const tasks = await getTasks();
+
+      setStats({
+        total: tasks.length,
+        pending: tasks.filter((t) => t.status === "Pending").length,
+        completed: tasks.filter((t) => t.status === "Completed").length,
+        high: tasks.filter((t) => t.priority === "High" && t.status === "Pending").length,
+      });
+
+    };
+
+    fetchData();
+  },[]);
 
   const completionPct =
     stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
@@ -37,9 +43,6 @@ const Home = () => {
           Stay in control.<br />
           <span className="text-yellow-400">Get things done.</span>
         </h1>
-        <p className="text-white/40 text-lg max-w-md leading-relaxed">
-          A minimal, focused task manager built for people who mean business.
-        </p>
         <div className="flex items-center gap-4 flex-wrap mt-2">
           <Link
             to="/add-task"

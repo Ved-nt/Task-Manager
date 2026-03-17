@@ -1,43 +1,48 @@
-const STORAGE_KEY = "taskmanager_tasks";
+const API_URL = "http://localhost:8080/tasks";
 
-export const getTasks = () => {
-  const tasks = localStorage.getItem(STORAGE_KEY);
-  return tasks ? JSON.parse(tasks) : [];
+export const getTasks = async () => {
+  const res = await fetch(API_URL);
+  if (!res.ok) throw new Error("Failed to fetch tasks");
+  return res.json();
+}
+
+
+//ADDING A NEW TASK
+export const addTask = async(task) => {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...task,
+      status: "Pending"
+    }),
+  });
+
+  if(!res.ok) throw new Error("Failed to add task");
+  return res.json();
 };
 
-export const saveTasks = (tasks) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+
+//UPDATE AN EXISTING TASK
+export const updateTask = async(id, updateFields) => {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateFields),
+  });
+  if(!res.ok) throw new Error("Failed to update task");
+  return res.json();
 };
 
-export const addTask = (task) => {
-  const tasks = getTasks();
-  const newTask = {
-    ...task,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-    status: task.status || "pending",
-  };
-  tasks.push(newTask);
-  saveTasks(tasks);
-  return newTask;
-};
+//DELETE A TASK
+export const deleteTask = async(id) => {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+  });
 
-export const updateTask = (id, updates) => {
-  const tasks = getTasks();
-  const index = tasks.findIndex((t) => t.id === id);
-  if (index !== -1) {
-    tasks[index] = { ...tasks[index], ...updates };
-    saveTasks(tasks);
-    return tasks[index];
-  }
-  return null;
-};
-
-export const deleteTask = (id) => {
-  const tasks = getTasks().filter((t) => t.id !== id);
-  saveTasks(tasks);
-};
-
-export const getTaskById = (id) => {
-  return getTasks().find((t) => t.id === id) || null;
+  if(!res.ok) throw new Error("Failed to delete task");
 };

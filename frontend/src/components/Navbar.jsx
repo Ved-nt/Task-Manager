@@ -14,9 +14,9 @@ const Navbar = () => {
       {/* Links */}
       <ul className="flex items-center gap-1 list-none">
         {[
-          { to: "/",         label: "Home"      },
-          { to: "/add-task", label: "Add Task"  },
-          { to: "/tasks",    label: "All Tasks" },
+          { to: "/", label: "Home" },
+          { to: "/add-task", label: "Add Task" },
+          { to: "/tasks", label: "All Tasks" },
         ].map(({ to, label }) => (
           <li key={to}>
             <NavLink

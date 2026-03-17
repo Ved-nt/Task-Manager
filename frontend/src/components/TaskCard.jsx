@@ -15,15 +15,19 @@ const formatDate = (iso) => {
 
 const TaskCard = ({ task, onUpdate }) => {
   const meta = PRIORITY_META[task.priority] || PRIORITY_META.Medium;
-  const isDone = task.status === "completed";
+  const isDone = task.status === "Completed";
 
-  const toggleStatus = () => {
-    updateTask(task.id, { status: isDone ? "pending" : "completed" });
+  const toggleStatus = async () => {
+    await updateTask(task.id, {
+      ...task,
+      status: isDone ? "Pending" : "Completed",
+    });
     onUpdate();
   };
 
-  const handleDelete = () => {
-    deleteTask(task.id);
+
+  const handleDelete = async () => {
+    await deleteTask(task.id);
     onUpdate();
   };
 
