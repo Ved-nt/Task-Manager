@@ -29,7 +29,14 @@ const AddTask = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
-    await addTask(form);
+
+    // Ensure dueDate is stored in ISO format (yyyy-MM-dd)
+    const formattedForm = {
+      ...form,
+      dueDate: form.dueDate ? new Date(form.dueDate).toISOString().split("T")[0] : ""
+    };
+
+    await addTask(formattedForm);
     setSubmitted(true);
     setTimeout(() => navigate("/tasks"), 1200);
   };
@@ -117,7 +124,7 @@ const AddTask = () => {
                 className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-yellow-400/40 transition-all cursor-pointer"
               >
                 {CATEGORIES.map((c) => (
-                  <option key={c} className="bg-gray-900">
+                  <option key={c} value={c} className="bg-gray-900">
                     {c}
                   </option>
                 ))}
@@ -131,15 +138,13 @@ const AddTask = () => {
               Due Date
             </label>
             <input
-              type="text"
+              type="date"
               name="dueDate"
               value={form.dueDate}
               onChange={handleChange}
-              placeholder="dd-MM-yyyy"
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 outline-none focus:border-yellow-400/40 transition-all w-fit"
+              className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-yellow-400/40 transition-all w-fit"
             />
           </div>
-
 
           {/* Status */}
           <div className="flex flex-col gap-1.5">

@@ -8,9 +8,11 @@ const PRIORITY_META = {
 
 const formatDate = (iso) => {
   if (!iso) return null;
-  return new Date(iso).toLocaleDateString("en-GB", {
-    day: "numeric", month: "short", year: "numeric",
-  });
+  const d = new Date(iso);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0"); // months are 0-based
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
 };
 
 const TaskCard = ({ task, onUpdate }) => {
