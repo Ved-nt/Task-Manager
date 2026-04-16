@@ -28,6 +28,7 @@ This project allows users to create, update, delete, and organize tasks with a m
 ## 📂 Project Structure
 
 ### Frontend (`frontend/`)
+```
 frontend/
 ├── src/
 │   ├── App.css
@@ -49,8 +50,9 @@ frontend/
 │   └── services/
 │       └── taskService.js
 
-
+```
 ### Backend (`taskManager/`)
+```
 taskManager/
 ├── pom.xml
 ├── src/
@@ -66,7 +68,7 @@ taskManager/
 │       └── templates/
 └── test/java/com/example/taskManager/
 └── TaskManagerApplicationTests.java
-
+```
 
 ## ⚙️ How It Works
 
